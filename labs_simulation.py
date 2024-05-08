@@ -1,5 +1,5 @@
-     
-       
+from typing import Callable
+
 from jmetal.algorithm.singleobjective.genetic_algorithm import GeneticAlgorithm
 from jmetal.operator import BestSolutionSelection
 from jmetal.operator.crossover import PMXCrossover
@@ -8,17 +8,18 @@ from jmetal.util.comparator import ObjectiveComparator
 from jmetal.util.observer import PrintObjectivesObserver
 from jmetal.util.termination_criterion import StoppingByEvaluations
 
+from follow_best_mutation import FollowBestGA
 from labs import LABS
 
 
-if __name__ == "__main__":
+def run_genetic_algorithm(genetic_algorithm_class: Callable, mutation_probability: float):
     problem = LABS(10)
     solution_comparator = ObjectiveComparator(0)
-    algorithm = GeneticAlgorithm(
+    algorithm = genetic_algorithm_class(
         problem=problem,
         population_size=100,
         offspring_population_size=100,
-        mutation=BitFlipMutation(1.0),
+        mutation=BitFlipMutation(mutation_probability),
         crossover=PMXCrossover(0.9),
         selection=BestSolutionSelection(),
         termination_criterion=StoppingByEvaluations(max_evaluations=1000),
@@ -34,3 +35,9 @@ if __name__ == "__main__":
     print("Solution: {}".format(result.variables[0]))
     print("Fitness: {}".format(result.objectives[0]))
     print("Computing time: {}".format(algorithm.total_computing_time))
+    print("===============================================")
+
+
+if __name__ == "__main__":
+    run_genetic_algorithm(GeneticAlgorithm, 1.0)
+    run_genetic_algorithm(FollowBestGA, 0.5)
