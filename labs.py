@@ -3,6 +3,7 @@ from jmetal.core.solution import BinarySolution
 
 import random
 
+
 class LABS(BinaryProblem):
     def __init__(
         self,
@@ -26,10 +27,13 @@ class LABS(BinaryProblem):
 
     def create_solution(self) -> BinarySolution:
         new_solution = BinarySolution(
-            number_of_variables=self.number_of_variables(), number_of_objectives=self.number_of_objectives()
+            number_of_variables=self.number_of_variables(),
+            number_of_objectives=self.number_of_objectives(),
         )
 
-        new_solution.variables[0] = [random.randint(0, 1) == 0 for _ in range(self.number_of_bits)]
+        new_solution.variables[0] = [
+            random.randint(0, 1) == 0 for _ in range(self.number_of_bits)
+        ]
 
         return new_solution
 
@@ -43,12 +47,14 @@ def aperiodic_autocorrelation(sequence, distance):
         autocorr += sequence[i] * sequence[i + distance]
     return autocorr
 
+
 def energy_function(sequence):
     energy = 0
     mapped_seq = list(map(lambda x: -1 if x is True else 1, sequence))
     for distance in range(1, len(sequence)):
         energy += aperiodic_autocorrelation(mapped_seq, distance) ** 2
     return energy
-    
+
+
 def merit_factor(sequence):
     return len(sequence) ** 2 / (2 * energy_function(sequence))
