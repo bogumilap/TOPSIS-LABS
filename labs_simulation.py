@@ -15,7 +15,8 @@ from labs import LABS
 
 
 def run_genetic_algorithm(
-    genetic_algorithm_class: Callable, mutation_probability: float
+        genetic_algorithm_class: Callable, mutation_probability: float,
+        max_evaluations: int = 10000
 ):
     problem = LABS(100)
     algorithm = genetic_algorithm_class(
@@ -25,7 +26,7 @@ def run_genetic_algorithm(
         mutation=BitFlipMutation(mutation_probability),
         crossover=SPXCrossover(0.9),
         selection=BestSolutionSelection(),
-        termination_criterion=StoppingByEvaluations(max_evaluations=10000),
+        termination_criterion=StoppingByEvaluations(max_evaluations=max_evaluations),
     )
 
     algorithm.observable.register(observer=PrintObjectivesObserver(1000))
@@ -39,6 +40,8 @@ def run_genetic_algorithm(
     print("Fitness: {}".format(result.objectives[0]))
     print("Computing time: {}".format(algorithm.total_computing_time))
     print("===============================================")
+
+    return result
 
 
 if __name__ == "__main__":
