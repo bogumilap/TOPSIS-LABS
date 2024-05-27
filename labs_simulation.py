@@ -1,6 +1,7 @@
-from typing import Callable
+from typing import Callable, Optional, List
 
 from jmetal.algorithm.singleobjective.genetic_algorithm import GeneticAlgorithm
+from jmetal.core.observer import Observer
 from jmetal.operator import BestSolutionSelection
 from jmetal.operator.crossover import SPXCrossover
 from jmetal.operator.mutation import BitFlipMutation
@@ -16,7 +17,7 @@ from labs import LABS
 
 def run_genetic_algorithm(
         genetic_algorithm_class: Callable, mutation_probability: float,
-        max_evaluations: int = 10000
+        max_evaluations: int = 10000, observers: Optional[List[Observer]] = None
 ):
     problem = LABS(100)
     algorithm = genetic_algorithm_class(
@@ -30,6 +31,9 @@ def run_genetic_algorithm(
     )
 
     algorithm.observable.register(observer=PrintObjectivesObserver(1000))
+    if observers is not None:
+        for observer in observers:
+            algorithm.observable.register(observer=observer)
 
     algorithm.run()
     result = algorithm.get_result()
