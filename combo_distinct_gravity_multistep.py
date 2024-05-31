@@ -10,7 +10,7 @@ from jmetal.algorithm.singleobjective.genetic_algorithm import S
 from softmax import softmax
 
 
-class FollowBestDistinctGA(GeneticAlgorithm):
+class ComboDistinctGravityMultistep(GeneticAlgorithm):
     N = 5
 
     def reproduction(self, mating_population: List[S]) -> List[S]:
@@ -30,10 +30,11 @@ class FollowBestDistinctGA(GeneticAlgorithm):
             for solution in offspring:
                 self.mutation_operator.execute(solution)
 
-                # "Follow Best Distinct" mutation
+                # "Combo Distinct Gravity Multistep" mutation
                 if len(offspring_population) > 0:
+                    # Follow part
                     # get top individuals in current population
-                    best_individuals = self.solutions[: FollowBestDistinctGA.N]
+                    best_individuals = self.solutions[: ComboDistinctGravityMultistep.N]
 
                     # calculate std deviations for top individuals for each gene position
                     number_of_genes = len(self.solutions[0].variables[0])
@@ -68,6 +69,23 @@ class FollowBestDistinctGA(GeneticAlgorithm):
                         for l in positons_of_genes_to_mutate:
                             solution.variables[k][l] = teacher.variables[k][l]
 
+                    # Repel part
+                    # get worst individuals in current population
+                    worst_individuals = self.solutions[
+                        -ComboDistinctGravityMultistep.N :
+                    ]
+
+                    # use all worst individuals as repellers
+                    # with given probability make current offspring's genes a negation of repeller's
+                    for repeller in worst_individuals:
+                        for k in range(solution.number_of_variables):
+                            for l in range(len(solution.variables[k])):
+                                rand = random.random()
+                                if rand <= self.mutation_operator.probability:
+                                    solution.variables[k][l] = not repeller.variables[
+                                        k
+                                    ][l]
+
                 offspring_population.append(solution)
                 if len(offspring_population) >= self.offspring_population_size:
                     break
@@ -75,4 +93,4 @@ class FollowBestDistinctGA(GeneticAlgorithm):
         return offspring_population
 
     def get_name(self) -> str:
-        return "GA with 'Follow Best Distinct' mutation"
+        return "GA with 'Combo Distinct Gravity Multistep' mutation"

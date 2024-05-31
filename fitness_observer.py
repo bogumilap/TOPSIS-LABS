@@ -14,4 +14,3 @@ class FitnessObserver(Observer):
 
         if (evaluations % self.display_frequency) == 0:
             self.fitness.append(solutions.objectives[0])
-
