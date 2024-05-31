@@ -27,13 +27,13 @@ def run_genetic_algorithm(
     max_evaluations: int = 10000,
     observers: Optional[List[Observer]] = None,
 ):
-    problem = LABS(100)
+    problem = LABS(50)
     algorithm = genetic_algorithm_class(
         problem=problem,
-        population_size=100,
-        offspring_population_size=100,
+        population_size=20,
+        offspring_population_size=10,
         mutation=BitFlipMutation(mutation_probability),
-        crossover=SPXCrossover(0.9),
+        crossover=SPXCrossover(0.5),
         selection=BestSolutionSelection(),
         termination_criterion=StoppingByEvaluations(max_evaluations=max_evaluations),
     )
