@@ -1,3 +1,4 @@
 jmetalpy
 jupyter
 matplotlib
+numpy
