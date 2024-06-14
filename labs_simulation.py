@@ -26,16 +26,34 @@ def run_genetic_algorithm(
     mutation_probability: float,
     max_evaluations: int = 10000,
     observers: Optional[List[Observer]] = None,
+    mutate_one_gene: Optional[bool] = None,
 ):
     problem = LABS(50)
-    algorithm = genetic_algorithm_class(
-        problem=problem,
-        population_size=20,
-        offspring_population_size=10,
-        mutation=BitFlipMutation(mutation_probability),
-        crossover=SPXCrossover(0.5),
-        selection=BestSolutionSelection(),
-        termination_criterion=StoppingByEvaluations(max_evaluations=max_evaluations),
+    algorithm = (
+        genetic_algorithm_class(
+            problem=problem,
+            population_size=20,
+            offspring_population_size=10,
+            mutation=BitFlipMutation(mutation_probability),
+            crossover=SPXCrossover(0.5),
+            selection=BestSolutionSelection(),
+            termination_criterion=StoppingByEvaluations(
+                max_evaluations=max_evaluations
+            ),
+            mutate_one_gene=mutate_one_gene,
+        )
+        if mutate_one_gene is not None
+        else genetic_algorithm_class(
+            problem=problem,
+            population_size=20,
+            offspring_population_size=10,
+            mutation=BitFlipMutation(mutation_probability),
+            crossover=SPXCrossover(0.5),
+            selection=BestSolutionSelection(),
+            termination_criterion=StoppingByEvaluations(
+                max_evaluations=max_evaluations
+            ),
+        )
     )
 
     # algorithm.observable.register(observer=PrintObjectivesObserver(1000))
@@ -59,13 +77,13 @@ def run_genetic_algorithm(
 if __name__ == "__main__":
     run_genetic_algorithm(GeneticAlgorithm, 0.5)
 
-    run_genetic_algorithm(FollowBestGA, 0.5)
-    run_genetic_algorithm(FollowBestDistinctGA, 0.5)
-    run_genetic_algorithm(RepelWorstGravity, 0.5)
-    run_genetic_algorithm(RepelWorstGravityMultistep, 0.5)
+    run_genetic_algorithm(FollowBestGA, 0.5, mutate_one_gene=True)
+    run_genetic_algorithm(FollowBestDistinctGA, 0.5, mutate_one_gene=True)
+    run_genetic_algorithm(RepelWorstGravity, 0.5, mutate_one_gene=True)
+    run_genetic_algorithm(RepelWorstGravityMultistep, 0.5, mutate_one_gene=True)
 
-    run_genetic_algorithm(ComboDistinctGravity, 0.5)
-    run_genetic_algorithm(ComboDistinctGravityMultistep, 0.5)
-    run_genetic_algorithm(ComboBestGravity, 0.5)
+    run_genetic_algorithm(ComboDistinctGravity, 0.5, mutate_one_gene=True)
+    run_genetic_algorithm(ComboDistinctGravityMultistep, 0.5, mutate_one_gene=True)
+    run_genetic_algorithm(ComboBestGravity, 0.5, mutate_one_gene=True)
 
-    run_genetic_algorithm(ComboBestGravityMultistep, 0.5)
+    run_genetic_algorithm(ComboBestGravityMultistep, 0.5, mutate_one_gene=True)

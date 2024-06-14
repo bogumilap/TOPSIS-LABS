@@ -50,8 +50,13 @@ class FollowBestDistinctGA(ParametrizedGeneticAlgorithm):
                     probabilities = softmax(std_devs)
 
                     # choose k genes positions based on probabilities
-                    K = ceil(
-                        self.problem.number_of_bits * self.mutation_operator.probability
+                    K = (
+                        1
+                        if self.mutate_one_gene
+                        else ceil(
+                            self.problem.number_of_bits
+                            * self.mutation_operator.probability
+                        )
                     )
                     positons_of_genes_to_mutate = random.choices(
                         list(range(number_of_genes)), weights=probabilities, k=K
