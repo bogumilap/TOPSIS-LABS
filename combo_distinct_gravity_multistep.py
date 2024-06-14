@@ -1,18 +1,16 @@
 import random
-import statistics
+import numpy as np
 
 from typing import List
 from math import ceil
 
-from jmetal.algorithm.singleobjective import GeneticAlgorithm
+from utils import ParametrizedGeneticAlgorithm
 from jmetal.algorithm.singleobjective.genetic_algorithm import S
 
 from softmax import softmax
 
 
-class ComboDistinctGravityMultistep(GeneticAlgorithm):
-    N = 5
-
+class ComboDistinctGravityMultistep(ParametrizedGeneticAlgorithm):
     def reproduction(self, mating_population: List[S]) -> List[S]:
         number_of_parents_to_combine = self.crossover_operator.get_number_of_parents()
 
@@ -41,12 +39,12 @@ class ComboDistinctGravityMultistep(GeneticAlgorithm):
                     std_devs = []
                     for bit_position in range(number_of_genes):
                         std_devs.append(
-                            # TODO: use numpy to speed this up
-                            statistics.stdev(
+                            np.std(
                                 [
                                     solution.variables[0][bit_position]
                                     for solution in best_individuals
-                                ]
+                                ],
+                                ddof=1,
                             )
                         )
                     # calculate probabilities from deviations via softmax

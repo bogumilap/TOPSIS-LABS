@@ -1,8 +1,6 @@
-from math import exp
+import numpy as np
 
-
-# TODO: use numpy to speed this up
 def softmax(array: list[float]):
-    to_e_power = list(map(exp, array))
-    denominator = sum(to_e_power)
-    return list(map(lambda x: x / denominator, to_e_power))
+    np_array = np.array(array)
+    exp_array = np.exp(np_array)
+    return list(exp_array / np.sum(exp_array))

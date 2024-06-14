@@ -2,13 +2,11 @@ import random
 
 from typing import List
 
-from jmetal.algorithm.singleobjective import GeneticAlgorithm
+from utils import ParametrizedGeneticAlgorithm
 from jmetal.algorithm.singleobjective.genetic_algorithm import S
 
 
-class ComboBestGravityMultistep(GeneticAlgorithm):
-    N = 5
-
+class ComboBestGravityMultistep(ParametrizedGeneticAlgorithm):
     def reproduction(self, mating_population: List[S]) -> List[S]:
         number_of_parents_to_combine = self.crossover_operator.get_number_of_parents()
 
