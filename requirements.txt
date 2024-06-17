@@ -2,3 +2,4 @@ jmetalpy
 jupyter
 matplotlib
 numpy
+scipy
